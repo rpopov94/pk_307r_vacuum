@@ -3,6 +3,7 @@ from PyQt5 import QtWidgets
 from PyQt5 import QtCore
 from pymodbus.client.sync import ModbusTcpClient
 from settings import ip
+from utilites import Utilites
 
 
 class BrowserHandler(QtCore.QObject):
@@ -69,13 +70,17 @@ class SPK(QtWidgets.QWidget):
         return color
 
     def get_pressure(self, address):
+        '''
+        :param address: address for read
+        :return: 11831,14134,17714,12843,21536,21071,82
+        '''
         client = ModbusTcpClient(ip)
         client.connect()
-        cmd = False
         pressure = client.read_holding_registers(address, 7)
-        pressure = [str(p) for p in pressure.registers]
+        pressure = [p for p in pressure.registers]
+        print(type(pressure))
         client.close()
-        text = ''.join(pressure)
+        text = Utilites.convert_response(pressure)
         return text
 
     # @QtCore.pyqtSlot()
