@@ -1,4 +1,4 @@
-from spk_307 import Spk_Dialog
+from spk_307 import Ui_Dialog
 from PyQt5 import QtWidgets
 from PyQt5 import QtCore
 from pymodbus.client.sync import ModbusTcpClient
@@ -21,9 +21,10 @@ class BrowserHandler(QtCore.QObject):
 class SPK(QtWidgets.QWidget):
     def __init__(self, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
-        self.w_root = Spk_Dialog()
+        self.w_root = Ui_Dialog()
         self.w_root.setupUi(self)
-        # self.timer = QtCore.QTimer(self)
+        self.client = ModbusTcpClient(ip)
+        self.client.connect()
         self.w_root.st_mption_1.clicked.connect(self.first_motion_control)
         self.w_root.st_motion_2.clicked.connect(self.second_motion_control)
         self.w_root.valve_11.clicked.connect(self.valve11_control)
@@ -33,19 +34,21 @@ class SPK(QtWidgets.QWidget):
         self.w_root.manage.clicked.connect(self.manage_control)
         self.w_root.stop.clicked.connect(self.stop_cotrol)
         self.w_root.settings.clicked.connect(self.settings_cotrol)
+        # self.w_root.start_manage.clicked.connect(self.moitor)
 
-        # # создадим поток
-        # self.thread = QtCore.QThread()
-        # # создадим объект для выполнения кода в другом потоке
-        # self.browserHandler = BrowserHandler()
-        # # перенесём объект в другой поток
-        # self.browserHandler.moveToThread(self.thread)
-        # # после чего подключим все сигналы и слоты
-        # self.browserHandler.newTextAndColor.connect(self.first_motion_control)
-        # # подключим сигнал старта потока к методу run у объекта, который должен выполнять код в другом потоке
-        # self.thread.started.connect(self.browserHandler.run)
-        # # запустим поток
-        # self.thread.start()
+        # создадим поток
+        self.thread = QtCore.QThread()
+        # создадим объект для выполнения кода в другом потоке
+        self.browserHandler = BrowserHandler()
+        # перенесём объект в другой поток
+        self.browserHandler.moveToThread(self.thread)
+        # после чего подключим все сигналы и слоты
+        self.browserHandler.newTextAndColor.connect(self.moitor)
+        # подключим сигнал старта потока к методу run у объекта, который должен выполнять код в другом потоке
+        self.thread.started.connect(self.browserHandler.run)
+        # запустим поток
+        self.thread.start()
+
 
     def reset_color(self):
         self.w_root.st_mption_1.setStyleSheet(f'background: red;')
@@ -56,30 +59,25 @@ class SPK(QtWidgets.QWidget):
         self.w_root.valve_22.setStyleSheet(f'background: red;')
 
     def handle(self, address):
-        client = ModbusTcpClient(ip)
-        client.connect()
         cmd = False
         color = 'red'
-        result = client.read_coils(address).bits[0]
+        result = self.client.read_coils(address).bits[0]
         # print(result)
         if result == False:
             cmd = True
             color = 'green'
-        client.write_coil(address, cmd)
-        client.close()
+        self.client.write_coil(address, cmd)
         return color
 
     def get_pressure(self, address):
         '''
         :param address: address for read
-        :return: 11831,14134,17714,12843,21536,21071,82
+        :example: 11831,14134,17714,12843,21536,21071,82
+        :return: str
         '''
-        client = ModbusTcpClient(ip)
-        client.connect()
-        pressure = client.read_holding_registers(address, 7)
+        pressure = self.client.read_holding_registers(address, 7)
         pressure = [p for p in pressure.registers]
-        print(type(pressure))
-        client.close()
+        # print(type(pressure))
         text = Utilites.convert_response(pressure)
         return text
 
@@ -139,7 +137,7 @@ class SPK(QtWidgets.QWidget):
         client = ModbusTcpClient(ip)
         client.connect()
         cmd = False
-        result = client.read_coils(258).bits[0]
+        result = self.client.read_coils(258).bits[0]
         # print(result)
         if result == False:
             cmd = True
@@ -148,12 +146,22 @@ class SPK(QtWidgets.QWidget):
         self.reset_color()
 
     def stop_cotrol(self):
-        client = ModbusTcpClient(ip)
-        client.connect()
-        client.write_coil(258, False)
-        client.write_register(330, value=0)
-        client.close()
-        # self.reset_color()
+        self.client.write_coil(258, False)
+        self.client.write_register(330, value=0)
+        self.client.close()
+
+    def button_monitor(self):
+        pass
+
+    def moitor(self):
+        self.w_root.pr_1.setText(self.get_pressure(272))
+        self.w_root.pr_2.setText(self.get_pressure(286))
+        self.w_root.volume_1_info.setText(self.get_pressure(268))
+        self.w_root.pr_3.setText(self.get_pressure(300))
+        self.w_root.pr_4.setText(self.get_pressure(314))
+        self.w_root.volume_2_info.setText(self.get_pressure(270))
+
+
 
 
     def settings_cotrol(self):

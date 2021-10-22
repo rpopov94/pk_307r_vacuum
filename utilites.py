@@ -2,8 +2,9 @@ class Utilites:
     '''
     handle answer from pressure sensor
     '''
-    def __init__(self, mas):
+    def __init__(self, mas, flag):
         self.mas = mas
+        self.flag = flag
 
     @classmethod
     def get_highlow(cls, txt):
@@ -24,8 +25,13 @@ class Utilites:
         answ = []
         for el in mas:
             i = str(hex(el))[2:]
-            h, l = cls.get_highlow(i)
+            l, h = cls.get_highlow(i)
             answ.append(chr(int(h, 16)))
             answ.append(chr(int(l, 16)))
-        text = ''.join(answ)
-        return str(text)
+        return ''.join(answ)
+
+    @classmethod
+    def color(cls, flag):
+        if flag==False:
+            return 'red'
+        return 'green'
