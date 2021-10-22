@@ -67,7 +67,7 @@ class SPK(QtWidgets.QWidget):
             cmd = True
             color = 'green'
         self.client.write_coil(address, cmd)
-        return color
+        return color, result
 
     def get_pressure(self, address):
         '''
@@ -87,7 +87,7 @@ class SPK(QtWidgets.QWidget):
         color = self.handle(260)
         self.w_root.st_mption_1.setStyleSheet(f'background: {color};')
         pressure = self.get_pressure(268)
-        self.w_root.volume_1_info.setText(pressure)
+        # self.w_root.volume_1_info.setText(pressure)
 
     def second_motion_control(self):
         # print('second_motion_control')
@@ -95,7 +95,7 @@ class SPK(QtWidgets.QWidget):
         color = self.handle(261)
         self.w_root.st_motion_2.setStyleSheet(f'background: {color};')
         pressure = self.get_pressure(270)
-        self.w_root.volume_2_info.setText(pressure)
+        # self.w_root.volume_2_info.setText(pressure)
 
     def valve11_control(self):
         # print('valve11_control')
@@ -151,15 +151,28 @@ class SPK(QtWidgets.QWidget):
         self.client.close()
 
     def button_monitor(self):
-        pass
+        c1 = Utilites.color(self.client.read_coils(260).bits[0])
+        self.w_root.st_mption_1.setStyleSheet(f'background: {c1};')
+        c2 = Utilites.color(self.client.read_coils(261).bits[0])
+        self.w_root.st_motion_2.setStyleSheet(f'background: {c2};')
+        c3 = Utilites.color(self.client.read_coils(290).bits[0])
+        self.w_root.valve_11.setStyleSheet(f'background: {c3};')
+        c4= Utilites.color(self.client.read_coils(291).bits[0])
+        self.w_root.valve_12.setStyleSheet(f'background: {c4};')
+        c5 = Utilites.color(self.client.read_coils(292).bits[0])
+        self.w_root.valve_21.setStyleSheet(f'background: {c5};')
+        c6 = Utilites.color(self.client.read_coils(293).bits[0])
+        self.w_root.valve_22.setStyleSheet(f'background: {c6};')
+
 
     def moitor(self):
         self.w_root.pr_1.setText(self.get_pressure(272))
         self.w_root.pr_2.setText(self.get_pressure(286))
-        self.w_root.volume_1_info.setText(self.get_pressure(268))
+        # self.w_root.volume_1_info.setText(self.get_pressure(268))
         self.w_root.pr_3.setText(self.get_pressure(300))
         self.w_root.pr_4.setText(self.get_pressure(314))
-        self.w_root.volume_2_info.setText(self.get_pressure(270))
+        # self.w_root.volume_2_info.setText(self.get_pressure(270))
+        self.button_monitor()
 
 
 

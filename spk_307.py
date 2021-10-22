@@ -108,18 +108,12 @@ class Ui_Dialog(object):
         self.manage.setObjectName("manage")
         self.volume_1_info = QtWidgets.QLabel(Dialog)
         self.volume_1_info.setGeometry(QtCore.QRect(500, 180, 121, 41))
-        self.volume_1_info.setStyleSheet("border-style: solid;\n"
-"border-width: 1.5px; \n"
-"border-color: black;\n"
-"")
+        self.volume_1_info.setStyleSheet("")
         self.volume_1_info.setText("")
         self.volume_1_info.setObjectName("volume_1_info")
         self.volume_2_info = QtWidgets.QLabel(Dialog)
         self.volume_2_info.setGeometry(QtCore.QRect(500, 460, 121, 41))
-        self.volume_2_info.setStyleSheet("border-style: solid;\n"
-"border-width: 1.5px; \n"
-"border-color: black;\n"
-"")
+        self.volume_2_info.setStyleSheet("")
         self.volume_2_info.setText("")
         self.volume_2_info.setObjectName("volume_2_info")
         self.date = QtWidgets.QLabel(Dialog)
@@ -127,7 +121,7 @@ class Ui_Dialog(object):
         self.date.setText("")
         self.date.setObjectName("date")
         self.pr_1 = QtWidgets.QLabel(Dialog)
-        self.pr_1.setGeometry(QtCore.QRect(350, 40, 110, 31))
+        self.pr_1.setGeometry(QtCore.QRect(491, 90, 141, 31))
         self.pr_1.setStyleSheet("border-style: solid;\n"
 "border-width: 1.5px; \n"
 "border-color: black;\n"
@@ -135,7 +129,7 @@ class Ui_Dialog(object):
         self.pr_1.setText("")
         self.pr_1.setObjectName("pr_1")
         self.pr_2 = QtWidgets.QLabel(Dialog)
-        self.pr_2.setGeometry(QtCore.QRect(270, 150, 110, 31))
+        self.pr_2.setGeometry(QtCore.QRect(90, 110, 131, 31))
         self.pr_2.setStyleSheet("border-style: solid;\n"
 "border-width: 1.5px; \n"
 "border-color: black;\n"
@@ -143,7 +137,7 @@ class Ui_Dialog(object):
         self.pr_2.setText("")
         self.pr_2.setObjectName("pr_2")
         self.pr_3 = QtWidgets.QLabel(Dialog)
-        self.pr_3.setGeometry(QtCore.QRect(366, 320, 110, 31))
+        self.pr_3.setGeometry(QtCore.QRect(90, 390, 131, 31))
         self.pr_3.setStyleSheet("border-style: solid;\n"
 "border-width: 1.5px; \n"
 "border-color: black;\n"
@@ -151,7 +145,7 @@ class Ui_Dialog(object):
         self.pr_3.setText("")
         self.pr_3.setObjectName("pr_3")
         self.pr_4 = QtWidgets.QLabel(Dialog)
-        self.pr_4.setGeometry(QtCore.QRect(273, 431, 110, 33))
+        self.pr_4.setGeometry(QtCore.QRect(490, 370, 141, 33))
         self.pr_4.setStyleSheet("border-style: solid;\n"
 "border-width: 1.5px; \n"
 "border-color: black;\n"
