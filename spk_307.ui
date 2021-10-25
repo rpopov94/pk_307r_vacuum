@@ -350,6 +350,12 @@ border-radius:10px;</string>
      <height>41</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">border-style: solid;
+border-width: 1.5px; 
+border-color: black;
+</string>
+   </property>
    <property name="text">
     <string/>
    </property>

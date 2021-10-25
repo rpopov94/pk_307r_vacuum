@@ -32,6 +32,10 @@ class Utilites:
 
     @classmethod
     def color(cls, flag):
-        if flag==False:
-            return 'red'
-        return 'green'
+        return 'red' if not flag else 'green'
+
+    @classmethod
+    def text_manage_control(cls, flag):
+        if flag == False:
+            return 'Manual'
+        return 'Auto'
