@@ -193,8 +193,6 @@ class SPK(QtWidgets.QWidget):
         self.ui = Ui_Settings()
         self.ui.setupUi(self.dialog)
         self.dialog.show()
-        # logging.info('Запущено окно настроек')
-
 
 if __name__ == "__main__":
     import sys

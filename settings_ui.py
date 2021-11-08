@@ -4,6 +4,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from pymodbus.client.sync import ModbusTcpClient
 from settings import ip
 import logging
+from vacuum_dialog import *
+from IP_address import *
 
 
 # class Worker(QtCore.QThread):
@@ -61,6 +63,7 @@ class SettingsHandler(QtCore.QObject):
 
 
 class Ui_Settings(object):
+
 
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
@@ -157,22 +160,29 @@ class Ui_Settings(object):
         # self.thread.start()
 
     def ip_address_control(self):
-        print('ip_adress')
+        self.dialog = QtWidgets.QMainWindow()
+        self.ui = Ip_Dialog()
+        self.ui.setupUi(self.dialog)
+        self.dialog.show()
 
     def datchicki_control(self):
-        try:
-            self.client.read_holding_registers(10300)
-            self.client.read_holding_registers(10302)
-            self.client.read_holding_registers(10316)
-            self.client.read_holding_registers(10318)
-            self.client.read_holding_registers(10320)
-            self.client.read_holding_registers(10322)
-            self.client.read_holding_registers(10308)
-            self.client.read_holding_registers(10310)
-            self.client.read_holding_registers(10312)
-            self.client.read_holding_registers(10314)
-        except:
-            pass
+        # try:
+        #     self.client.read_holding_registers(10300)
+        #     self.client.read_holding_registers(10302)
+        #     self.client.read_holding_registers(10316)
+        #     self.client.read_holding_registers(10318)
+        #     self.client.read_holding_registers(10320)
+        #     self.client.read_holding_registers(10322)
+        #     self.client.read_holding_registers(10308)
+        #     self.client.read_holding_registers(10310)
+        #     self.client.read_holding_registers(10312)
+        #     self.client.read_holding_registers(10314)
+        # except:
+        #     pass
+        self.dialog = QtWidgets.QMainWindow()
+        self.ui = Vacuum()
+        self.ui.setupUi(self.dialog)
+        self.dialog.show()
 
     def hand_manage(self):
         print('hand_manage')
@@ -189,17 +199,18 @@ class Ui_Settings(object):
             self.client.write_registers(10310, int(self.klapan_2_max.toPlainText()))
             self.client.write_registers(10312, int(self.klapan_3_max.toPlainText()))
             self.client.write_registers(10314, int(self.klapan_4_max.toPlainText()))
+            logging.info('Change values for motions')
         except:
-            self.valve_1.setText('-1')
-            self.valve_2.setText('-1')
-            self.klapan_1_min.setText('-1')
-            self.klapan_2_min.setText('-1')
-            self.klapan_3_min.setText('-1')
-            self.klapan_4_min.setText('-1')
-            self.klapan_1_max.setText('-1')
-            self.klapan_2_max.setText('-1')
-            self.klapan_3_max.setText('-1')
-            self.klapan_4_max.setText('-1')
+            # self.valve_1.setText('-1')
+            # self.valve_2.setText('-1')
+            # self.klapan_1_min.setText('-1')
+            # self.klapan_2_min.setText('-1')
+            # self.klapan_3_min.setText('-1')
+            # self.klapan_4_min.setText('-1')
+            # self.klapan_1_max.setText('-1')
+            # self.klapan_2_max.setText('-1')
+            # self.klapan_3_max.setText('-1')
+            # self.klapan_4_max.setText('-1')
             logging.error('Ошибка отправки данных, проверьте свой ввод!')
 
     def update_values(self):
