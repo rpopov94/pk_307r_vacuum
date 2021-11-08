@@ -1,0 +1,13 @@
+2021-11-08 14:35:06,177 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-08 14:35:55,353 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-08 14:42:43,886 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-08 14:43:12,293 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-08 14:45:29,215 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-08 14:45:31,725 ERROR settings_ui send_settings Ошибка отправки данных, проверьте свой ввод!
+2021-11-08 14:48:17,629 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-08 14:48:42,184 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-08 14:48:44,854 ERROR settings_ui send_settings Ошибка отправки данных, проверьте свой ввод!
+2021-11-08 14:48:48,330 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-08 14:48:51,346 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-08 14:49:43,368 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-08 14:49:46,132 ERROR settings_ui send_settings Ошибка отправки данных, проверьте свой ввод!
