@@ -54,7 +54,7 @@ class SPK(QtWidgets.QWidget):
             self.client = ModbusTcpClient(ip)
             self.client.connect()
         except:
-            print('ModbusTcpClient connection error')
+            pass
           # log to text box
         logTextBox.setFormatter(
             logging.Formatter(
@@ -181,12 +181,7 @@ class SPK(QtWidgets.QWidget):
             c6 = Utilites.color(self.client.read_coils(293).bits[0])
             self.w_root.valve_22.setStyleSheet(f'background: {c6};')
         except:
-            msg = QMessageBox()
-            msg.setIcon(QMessageBox.Critical)
-            msg.setText("Error")
-            msg.setInformativeText('More information')
-            msg.setWindowTitle("Error")
-            msg.exec_()
+            logging.error('Thread not work!')
 
     def settings_cotrol(self):
         self.dialog = QtWidgets.QMainWindow()

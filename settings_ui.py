@@ -132,13 +132,22 @@ class Ui_Settings(object):
         self.datchicki = QtWidgets.QPushButton(self.gridLayoutWidget)
         self.datchicki.setObjectName("datchicki")
         self.gridLayout.addWidget(self.datchicki, 2, 5, 1, 1)
-        self.i_o_manage = QtWidgets.QPushButton(self.gridLayoutWidget)
-        self.i_o_manage.setObjectName("i_o_manage")
-        self.gridLayout.addWidget(self.i_o_manage, 3, 5, 1, 1)
+        # self.i_o_manage = QtWidgets.QPushButton(self.gridLayoutWidget)
+        # self.i_o_manage.setObjectName("i_o_manage")
+        # self.gridLayout.addWidget(self.i_o_manage, 3, 5, 1, 1)
         self.send = QtWidgets.QPushButton(Dialog)
         self.send.setGeometry(QtCore.QRect(580, 400, 75, 23))
         self.send.setText("OK")
         self.send.setObjectName("send")
+        self.label_5 = QtWidgets.QLabel(Dialog)
+        self.label_5.setGeometry(QtCore.QRect(210, 40, 211, 31))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(12)
+        self.label_5.setFont(font)
+        self.label_5.setTextFormat(QtCore.Qt.MarkdownText)
+        self.label_5.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_5.setObjectName("label_5")
         try:
             self.client = ModbusTcpClient(ip)
             self.client.connect()
@@ -149,8 +158,31 @@ class Ui_Settings(object):
         QtCore.QMetaObject.connectSlotsByName(Dialog)
         self.ip_adress.clicked.connect(self.ip_address_control)
         self.datchicki.clicked.connect(self.datchicki_control)
-        self.i_o_manage.clicked.connect(self.hand_manage)
+        # self.i_o_manage.clicked.connect(self.hand_manage)
         self.send.clicked.connect(self.send_settings)
+        try:
+            self.valve_1.setText(Utilites.get_values_from_response(self.client.read_holding_registers(10300)))
+            self.valve_2.setText(Utilites.get_values_from_response(self.client.read_holding_registers(10302)))
+            self.klapan_1_min.setText(Utilites.get_values_from_response(self.client.read_holding_registers(10316)))
+            self.klapan_2_min.setText(Utilites.get_values_from_response(self.client.read_holding_registers(10318)))
+            self.klapan_3_min.setText(Utilites.get_values_from_response(self.client.read_holding_registers(10320)))
+            self.klapan_4_min.setText(Utilites.get_values_from_response(self.client.read_holding_registers(10322)))
+            self.klapan_1_max.setText(Utilites.get_values_from_response(self.client.read_holding_registers(10308)))
+            self.klapan_2_max.setText(Utilites.get_values_from_response(self.client.read_holding_registers(10310)))
+            self.klapan_3_max.setText(Utilites.get_values_from_response(self.client.read_holding_registers(10312)))
+            self.klapan_4_max.setText(Utilites.get_values_from_response(self.client.read_holding_registers(10314)))
+        except:
+            logging.error('Values does not initialize')
+            # self.valve_1.setText('None')
+            # self.valve_2.setText('None')
+            # self.klapan_1_min.setText('None')
+            # self.klapan_2_min.setText('None')
+            # self.klapan_3_min.setText('None')
+            # self.klapan_4_min.setText('None')
+            # self.klapan_1_max.setText('None')
+            # self.klapan_2_max.setText('None')
+            # self.klapan_3_max.setText('None')
+            # self.klapan_4_max.setText('None')
 
         # self.thread = QtCore.QThread()
         # self.browserHandler = SettingsHandler()
@@ -166,26 +198,10 @@ class Ui_Settings(object):
         self.dialog.show()
 
     def datchicki_control(self):
-        # try:
-        #     self.client.read_holding_registers(10300)
-        #     self.client.read_holding_registers(10302)
-        #     self.client.read_holding_registers(10316)
-        #     self.client.read_holding_registers(10318)
-        #     self.client.read_holding_registers(10320)
-        #     self.client.read_holding_registers(10322)
-        #     self.client.read_holding_registers(10308)
-        #     self.client.read_holding_registers(10310)
-        #     self.client.read_holding_registers(10312)
-        #     self.client.read_holding_registers(10314)
-        # except:
-        #     pass
         self.dialog = QtWidgets.QMainWindow()
-        self.ui = Vacuum()
+        self.ui = Ui_Vacuum()
         self.ui.setupUi(self.dialog)
         self.dialog.show()
-
-    def hand_manage(self):
-        print('hand_manage')
 
     def send_settings(self):
         try:
@@ -201,20 +217,7 @@ class Ui_Settings(object):
             self.client.write_registers(10314, int(self.klapan_4_max.toPlainText()))
             logging.info('Change values for motions')
         except:
-            # self.valve_1.setText('-1')
-            # self.valve_2.setText('-1')
-            # self.klapan_1_min.setText('-1')
-            # self.klapan_2_min.setText('-1')
-            # self.klapan_3_min.setText('-1')
-            # self.klapan_4_min.setText('-1')
-            # self.klapan_1_max.setText('-1')
-            # self.klapan_2_max.setText('-1')
-            # self.klapan_3_max.setText('-1')
-            # self.klapan_4_max.setText('-1')
-            logging.error('Ошибка отправки данных, проверьте свой ввод!')
-
-    def update_values(self):
-        print('update_values')
+            logging.error('Error for send data!')
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
@@ -225,9 +228,5 @@ class Ui_Settings(object):
         self.label_2.setText(_translate("Dialog", "Max"))
         self.ip_adress.setText(_translate("Dialog", "IP адрес"))
         self.datchicki.setText(_translate("Dialog", "Настройка датчиков"))
-        self.i_o_manage.setText(_translate("Dialog", "Ручное управление \n Вход-Выход"))
-
-
-
-
-
+        # self.i_o_manage.setText(_translate("Dialog", "Ручное управление \n Вход-Выход"))
+        self.label_5.setText(_translate("Dialog", "Меню настроек"))

@@ -39,3 +39,9 @@ class Utilites:
         if flag == False:
             return 'Manual'
         return 'Auto'
+
+    @classmethod
+    def get_values_from_response(cls, values):
+        pressure = [p for p in values.registers]
+        text = cls.convert_response(pressure)
+        return text

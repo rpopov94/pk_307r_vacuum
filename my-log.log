@@ -20,3 +20,50 @@
 2021-11-08 15:32:06,208 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
 2021-11-08 15:38:17,833 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
 2021-11-08 15:42:19,542 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 14:49:17,885 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 14:51:33,673 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 14:56:01,440 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 14:56:04,452 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 14:56:04,452 ERROR settings_ui setupUi Values does not initialize
+2021-11-09 14:57:18,830 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 14:57:21,844 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 14:57:21,845 ERROR settings_ui setupUi Values does not initialize
+2021-11-09 15:00:56,176 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 15:00:59,183 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 15:00:59,184 ERROR settings_ui setupUi Values does not initialize
+2021-11-09 15:01:02,305 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 15:01:05,332 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 15:01:05,333 ERROR settings_ui setupUi Values does not initialize
+2021-11-09 15:03:10,294 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 15:03:13,306 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 15:03:13,307 ERROR settings_ui setupUi Values does not initialize
+2021-11-09 15:04:53,545 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 15:04:56,553 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 15:04:56,554 ERROR settings_ui setupUi Values does not initialize
+2021-11-09 15:05:54,663 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 15:05:57,672 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 15:05:57,672 ERROR settings_ui setupUi Values does not initialize
+2021-11-09 15:06:18,037 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 15:06:21,047 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 15:06:21,048 ERROR settings_ui setupUi Values does not initialize
+2021-11-09 15:06:38,480 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 15:06:41,499 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 15:06:41,499 ERROR settings_ui setupUi Values does not initialize
+2021-11-09 15:10:05,130 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 15:10:08,138 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 15:10:08,139 ERROR settings_ui setupUi Values does not initialize
+2021-11-09 15:39:50,841 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 15:39:53,864 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 15:39:53,865 ERROR settings_ui setupUi Values does not initialize
+2021-11-09 15:40:02,665 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 15:40:05,673 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 15:50:57,177 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 15:51:00,186 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 15:51:00,187 ERROR settings_ui setupUi Values does not initialize
+2021-11-09 15:51:15,633 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 15:51:18,651 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 15:51:18,653 ERROR settings_ui setupUi Values does not initialize
+2021-11-09 15:52:21,587 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 15:52:24,605 ERROR sync connect Connection to (159.93.99.122, 502) failed: timed out
+2021-11-09 15:52:24,606 ERROR settings_ui setupUi Values does not initialize
+2021-11-09 15:52:42,553 ERROR settings_ui send_settings Ошибка отправки данных, проверьте свой ввод!
