@@ -1,13 +1,10 @@
-from PyQt5.QtWidgets import QMessageBox
+from graph_one import Graph_One
+from graph_second import Graph_Second
 from spk_307 import Ui_Dialog
-from PyQt5 import QtWidgets
-from PyQt5 import QtCore
-from pymodbus.client.sync import ModbusTcpClient
-from settings import ip
-from utilites import Utilites
 import datetime
 from settings_ui import *
 import logging
+import pandas as pd
 
 
 class QTextEditLogger(logging.Handler, QtCore.QObject):
@@ -36,6 +33,7 @@ class BrowserHandler(QtCore.QObject):
 
 
 class SPK(QtWidgets.QWidget):
+    pressure = QtCore.pyqtSignal(int, int)
     def __init__(self):
         super().__init__()
         self.w_root = Ui_Dialog()
@@ -49,13 +47,27 @@ class SPK(QtWidgets.QWidget):
         self.w_root.manage.clicked.connect(self.manage_control)
         self.w_root.stop.clicked.connect(self.stop_cotrol)
         self.w_root.settings.clicked.connect(self.settings_cotrol)
+        self.w_root.pushButton.clicked.connect(self.graph_1)
+        self.w_root.pushButton_2.clicked.connect(self.graph_2)
+        self.w2 = Graph_One()
+        self.w3 = Graph_Second()
+
+        self.thread = QtCore.QThread()
+        self.browserHandler = BrowserHandler()
+        self.browserHandler.moveToThread(self.thread)
+        self.browserHandler.newTextAndColor.connect(self.monitor)
+        self.thread.started.connect(self.browserHandler.run)
+        # self.thread.start(QtCore.QThread.LowestPriority) #раскоментировать когда будет подключена связь
+
+        '''#######################logger ########################'''
+        ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
         logTextBox = QTextEditLogger(self)
         try:
             self.client = ModbusTcpClient(ip)
             self.client.connect()
         except:
             pass
-          # log to text box
+        # log to text box
         logTextBox.setFormatter(
             logging.Formatter(
                 '%(asctime)s %(levelname)s %(module)s %(funcName)s %(message)s'))
@@ -63,19 +75,23 @@ class SPK(QtWidgets.QWidget):
         logging.getLogger().setLevel(logging.DEBUG)
 
         # log to file
-        fh = logging.FileHandler('my-log.log')
+        fh = logging.FileHandler('logfile.log')
         fh.setLevel(logging.DEBUG)
         fh.setFormatter(
             logging.Formatter(
                 '%(asctime)s %(levelname)s %(module)s %(funcName)s %(message)s'))
         logging.getLogger().addHandler(fh)
+    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-        # self.thread = QtCore.QThread()
-        # self.browserHandler = BrowserHandler()
-        # self.browserHandler.moveToThread(self.thread)
-        # self.browserHandler.newTextAndColor.connect(self.monitor)
-        # self.thread.started.connect(self.browserHandler.run)
-        # self.thread.start()
+    def graph_1(self):
+        if self.w3.two_thread.isRunning():
+            self.w3.two_thread.quit()
+        self.w2.show()
+
+    def graph_2(self):
+        if self.w2.one_thread.isRunning():
+            self.w2.one_thread.quit()
+        self.w2.show()
 
     def create_logger(path, widget: QtWidgets.QTextEdit):
         log = logging.getLogger('main')
@@ -159,13 +175,14 @@ class SPK(QtWidgets.QWidget):
 
     @QtCore.pyqtSlot()
     def monitor(self):
+        now = datetime.datetime.now()
+        self.w_root.date.setText(now.strftime('%c'))
         try:
-            now = datetime.datetime.now()
-            self.w_root.date.setText(now.strftime('%c'))
             self.w_root.pr_1.setText(self.get_pressure(286))
             self.w_root.pr_2.setText(self.get_pressure(272))
             self.w_root.pr_3.setText(self.get_pressure(300))
             self.w_root.pr_4.setText(self.get_pressure(314))
+            self.pressure.emit(int(self.w_root.pr_4.text()), int(self.w_root.pr_1.text()))
             manage = Utilites.color(self.client.read_coils(258).bits[0])
             self.w_root.manage.setStyleSheet(f'background: {manage};')
             c1 = Utilites.color(self.client.read_coils(260).bits[0])
@@ -182,12 +199,23 @@ class SPK(QtWidgets.QWidget):
             self.w_root.valve_22.setStyleSheet(f'background: {c6};')
         except:
             logging.error('Thread not work!')
+            self.w_root.pr_1.setText('None')
+            self.w_root.pr_2.setText('None')
+            self.w_root.pr_3.setText('None')
+            self.w_root.pr_4.setText('None')
+        # data = [now, self.w_root.pr_1.text(), self.w_root.pr_2.text(),
+        #         self.w_root.pr_3.text(), self.w_root.pr_4.text()]
+        # df = pd.DataFrame(data, columns=['time', 'pressure_1', 'pressure_2',
+        #                                  'pressure_3', 'pressure_4'])
+        # df.append(data, ignore_index=True)
+        # df.to_csv("data.csv", index=False, sep=',', encoding='utf-8')
 
     def settings_cotrol(self):
         self.dialog = QtWidgets.QMainWindow()
         self.ui = Ui_Settings()
         self.ui.setupUi(self.dialog)
         self.dialog.show()
+
 
 if __name__ == "__main__":
     import sys
