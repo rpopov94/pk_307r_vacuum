@@ -1,3 +1,8 @@
+import os
+import pandas as pd
+from datetime import datetime
+
+
 class Utilites:
     '''
     handle answer from pressure sensor
@@ -45,3 +50,16 @@ class Utilites:
         pressure = [p for p in values.registers]
         text = cls.convert_response(pressure)
         return text
+    
+    @classmethod
+    def data_save(**kwargs):
+        now = datetime.now()
+        day = now.strftime("_%d_%m_%y")
+        dir_path = os.path.dirname(os.path.realpath("__file__")) 
+        try:
+            os.file.exists(f'data_for{day}.csv')        
+        except:
+            df = pd.DataFrame(columns=kwargs.keys())
+        row = pd.Series(kwargs, name=now.strftime("%d/%m/%y %I:%M:%S"))
+        df.loc[now.strftime("%d/%m/%y %I:%M:%S")] = row
+        df.to_csv(dir_path + f'\data_for{day}.csv', mode='a', header=False)
