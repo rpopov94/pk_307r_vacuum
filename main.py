@@ -94,7 +94,7 @@ class SPK(QtWidgets.QWidget):
     def graph_2(self):
         if self.w2.one_thread.isRunning():
             self.w2.one_thread.quit()
-        self.w2.show()
+        self.w3.show()
 
     def create_logger(path, widget: QtWidgets.QTextEdit):
         log = logging.getLogger('main')
@@ -232,12 +232,6 @@ class SPK(QtWidgets.QWidget):
             self.w_root.pr_2.setText('None')
             self.w_root.pr_3.setText('None')
             self.w_root.pr_4.setText('None')
-        # data = [now, self.w_root.pr_1.text(), self.w_root.pr_2.text(),
-        #         self.w_root.pr_3.text(), self.w_root.pr_4.text()]
-        # df = pd.DataFrame(data, columns=['time', 'pressure_1', 'pressure_2',
-        #                                  'pressure_3', 'pressure_4'])
-        # df.append(data, ignore_index=True)
-        # df.to_csv("data.csv", index=False, sep=',', encoding='utf-8')
 
     def settings_cotrol(self):
         self.dialog = QtWidgets.QMainWindow()

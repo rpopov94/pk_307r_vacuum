@@ -7,6 +7,7 @@ class Utilites:
     '''
     handle answer from pressure sensor
     '''
+
     def __init__(self, mas, flag):
         self.mas = mas
         self.flag = flag
@@ -53,21 +54,15 @@ class Utilites:
 
     @classmethod
     def get_pressure(cls, client, address):
-        pressure = cls.client.read_holding_registers(address, 7)
+        pressure = client.read_holding_registers(address, 7)
         pressure = [p for p in pressure.registers]
         text = Utilites.convert_response(pressure)
-        return text.split()
+        return text
 
     @classmethod
     def data_save(cls, **kwargs):
         now = datetime.now()
-        day = now.strftime("_%d_%m_%y")
-        dir_path = os.path.dirname(os.path.realpath("__file__"))
-        df = None
-        try:
-            os.file.exists(f'data_for{day}.csv')        
-        except:
-            df = pd.DataFrame(columns=kwargs.keys())
-        row = pd.Series(kwargs, name=now.strftime("%d/%m/%y %I:%M:%S"))
-        df.loc[now.strftime("%d/%m/%y %I:%M:%S")] = row
-        df.to_csv(dir_path + f'\data_for{day}.csv', mode='a', header=False)
+        df = pd.DataFrame(columns=kwargs.keys())
+        row = pd.Series(kwargs, name=now.strftime("%I:%M:%S"))
+        df.loc[now.strftime("%I:%M:%S")] = row
+        df.to_csv(f'{now.strftime("%Y-%m-%d")}.csv', mode='a', header=False)

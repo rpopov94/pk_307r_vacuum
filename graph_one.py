@@ -11,24 +11,24 @@ from utilites import Utilites
 
 
 class BrowserHandler(QtCore.QObject):
-    newTextAndColor = QtCore.pyqtSignal(list)
+    newTextAndColor = QtCore.pyqtSignal(float)
     try:
         client = ModbusTcpClient(ip)
     except:
         logging.error('ConnectionError')
+
     def run(self):
         while True:
             if self.client.connect():
-                list = None
                 pressure = Utilites.get_pressure(self.client, 286)
-                self.newTextAndColor.emit(pressure)
+                self.newTextAndColor.emit(float(pressure))
             else:
-                str = None
-                self.newTextAndColor.emit([random.random() for i in range(10)])
+                self.newTextAndColor.emit(float(random.random()))
             QtCore.QThread.msleep(1000)
 
 
 class Graph_One(QDialog):
+    data_f = []
     def __init__(self, parent=None):
         super(Graph_One, self).__init__(parent)
         self.setWindowTitle('Graph_1')
@@ -50,13 +50,11 @@ class Graph_One(QDialog):
         self.one_thread.started.connect(self.browserHandler.run)
         self.one_thread.start(QtCore.QThread.LowestPriority)
 
-    @QtCore.pyqtSlot(list)
+    @QtCore.pyqtSlot(float)
     def plot(self, data):
         self.figure.clear()
         ax = self.figure.add_subplot(111)
         ax.grid(True)
-        data_f = ['%f' % x for x in data]
-        if len(data_f) >= 100:
-            data_f.pop(data_f[0])
-        ax.plot(data_f, '*-')
+        self.data_f.append(data)
+        ax.plot(self.data_f, '*-')
         self.canvas.draw()
