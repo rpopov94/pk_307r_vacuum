@@ -33,6 +33,9 @@ class BrowserHandler(QtCore.QObject):
 
 
 class SPK(QtWidgets.QWidget):
+    now = datetime.now()
+    df = pd.DataFrame()
+    df.to_csv(f'{now.strftime("%Y-%m-%d")}.csv')
     pressure = QtCore.pyqtSignal(int, int)
     def __init__(self):
         super().__init__()
@@ -57,7 +60,7 @@ class SPK(QtWidgets.QWidget):
         self.browserHandler.moveToThread(self.thread)
         self.browserHandler.newTextAndColor.connect(self.monitor)
         self.thread.started.connect(self.browserHandler.run)
-        # self.thread.start(QtCore.QThread.LowestPriority) #раскоментировать когда будет подключена связь
+        self.thread.start(QtCore.QThread.LowestPriority) #раскоментировать когда будет подключена связь
 
         '''#######################logger ########################'''
         ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -134,9 +137,8 @@ class SPK(QtWidgets.QWidget):
         result = self.client.read_coils(address).bits[0]
         if result == False:
             cmd = True
-            color = 'green'
         self.client.write_coil(address, cmd)
-        return color, result
+
 
     def get_pressure(self, address):
         pressure = self.client.read_holding_registers(address, 7)
@@ -145,43 +147,70 @@ class SPK(QtWidgets.QWidget):
         return text
 
     def first_motion_control(self):
-        self.handle(260)
+        try:
+            self.handle(260)
+        except:
+            logging.warning('Address 260 not changed')
 
     def second_motion_control(self):
-        self.handle(261)
+        try:
+            self.handle(261)
+        except:
+            logging.warning('Address 261 not changed')
 
     def valve11_control(self):
-        self.handle(280)
+        try:
+            self.handle(280)
+        except:
+            logging.warning('Address 280 not changed')
 
     def valve12_control(self):
-        self.handle(281)
+        try:
+            self.handle(281)
+        except:
+            logging.warning('Address 281 not changed')
 
     def valve21_control(self):
-        self.handle(282)
+        try:
+            self.handle(282)
+        except:
+            logging.warning('Address 282 not changed')
 
     def valve22_control(self):
         self.handle(283)
 
     def manage_control(self):
-        cmd = False
-        result = self.client.read_coils(258).bits[0]
-        if result == False:
-            cmd = True
-        self.client.write_coil(258, cmd)
+        try:
+            cmd = False
+            result = self.client.read_coils(258).bits[0]
+            if result == False:
+                cmd = True
+            self.client.write_coil(258, cmd)
+        except:
+            logging.warning('Address 258 not changed')
 
     def stop_cotrol(self):
-        self.client.write_coil(258, value=0)
-        self.client.write_register(330, value=0)
+        try:
+            self.client.write_coil(258, value=0)
+            self.client.write_register(330, value=0)
+        except:
+            logging.warning('Button stop not worked')
 
     @QtCore.pyqtSlot()
     def monitor(self):
-        now = datetime.datetime.now()
-        self.w_root.date.setText(now.strftime('%c'))
         try:
-            self.w_root.pr_1.setText(self.get_pressure(286))
-            self.w_root.pr_2.setText(self.get_pressure(272))
-            self.w_root.pr_3.setText(self.get_pressure(300))
-            self.w_root.pr_4.setText(self.get_pressure(314))
+            now = datetime.datetime.now()
+            self.w_root.date.setText(now.strftime('%c'))
+            pressure1 = self.get_pressure(286)
+            pressure2 = self.get_pressure(272)
+            pressure3 = self.get_pressure(300)
+            pressure4 = self.get_pressure(314)
+            Utilites.data_save(valve_1 = pressure1, valve_2 = pressure2,
+                               valve_3 = pressure3, valve_4 = pressure4)
+            self.w_root.pr_1.setText(pressure1)
+            self.w_root.pr_2.setText(pressure2)
+            self.w_root.pr_3.setText(pressure3)
+            self.w_root.pr_4.setText(pressure4)
             self.pressure.emit(int(self.w_root.pr_4.text()), int(self.w_root.pr_1.text()))
             manage = Utilites.color(self.client.read_coils(258).bits[0])
             self.w_root.manage.setStyleSheet(f'background: {manage};')

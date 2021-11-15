@@ -154,6 +154,12 @@ class Ui_Dialog(object):
         self.start_manage.setText("")
         self.start_manage.setIconSize(QtCore.QSize(1, 1))
         self.start_manage.setObjectName("start_manage")
+        self.pushButton = QtWidgets.QPushButton(Dialog)
+        self.pushButton.setGeometry(QtCore.QRect(492, 128, 141, 131))
+        self.pushButton.setObjectName("pushButton")
+        self.pushButton_2 = QtWidgets.QPushButton(Dialog)
+        self.pushButton_2.setGeometry(QtCore.QRect(490, 409, 141, 131))
+        self.pushButton_2.setObjectName("pushButton_2")
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -162,4 +168,8 @@ class Ui_Dialog(object):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.manage.setText(_translate("Dialog", "Auto"))
+        self.pushButton.setText(_translate("Dialog", "Объем 1"))
+        self.pushButton_2.setText(_translate("Dialog", "Объем 2"))
+
+
 

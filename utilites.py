@@ -50,12 +50,20 @@ class Utilites:
         pressure = [p for p in values.registers]
         text = cls.convert_response(pressure)
         return text
-    
+
     @classmethod
-    def data_save(**kwargs):
+    def get_pressure(cls, client, address):
+        pressure = cls.client.read_holding_registers(address, 7)
+        pressure = [p for p in pressure.registers]
+        text = Utilites.convert_response(pressure)
+        return text.split()
+
+    @classmethod
+    def data_save(cls, **kwargs):
         now = datetime.now()
         day = now.strftime("_%d_%m_%y")
-        dir_path = os.path.dirname(os.path.realpath("__file__")) 
+        dir_path = os.path.dirname(os.path.realpath("__file__"))
+        df = None
         try:
             os.file.exists(f'data_for{day}.csv')        
         except:
