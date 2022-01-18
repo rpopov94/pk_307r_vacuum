@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from PyQt5 import QtCore, QtGui, QtWidgets
 from pymodbus.client.sync import ModbusTcpClient
-from settings import ip
+# from settings import ip
 from utilites import Utilites
 
 

@@ -2,7 +2,6 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from pymodbus.client.sync import ModbusTcpClient
-from settings import ip
 import logging
 from vacuum_dialog import *
 from IP_address import *
@@ -53,15 +52,13 @@ from IP_address import *
     #             valve_3_min = self.valve_3_min
     #             valve_4_min = self.valve_4_min
     #         QtCore.QThread.msleep(1000)
+
 class SettingsHandler(QtCore.QObject):
     newTextAndColor = QtCore.pyqtSignal()
-
     def run(self):
         while True:
             self.newTextAndColor.emit()
             QtCore.QThread.msleep(1000)
-
-
 class Ui_Settings(object):
 
 

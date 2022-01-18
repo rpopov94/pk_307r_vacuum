@@ -36,3 +36,4 @@ typing-extensions==3.10.0.2
 wcwidth==0.2.5
 yarl==1.6.3
 zope.interface==5.4.0
+python-dotenv==0.19.2

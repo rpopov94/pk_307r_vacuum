@@ -1,6 +1,6 @@
+import csv
 import os
-import pandas as pd
-from datetime import datetime
+from dotenv import load_dotenv
 
 
 class Utilites:
@@ -11,6 +11,16 @@ class Utilites:
     def __init__(self, mas, flag):
         self.mas = mas
         self.flag = flag
+
+    @classmethod
+    def get_ip(cls, ip=None):
+        IP = None
+        if  ip == None:
+            dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+            if os.path.exists(dotenv_path):
+                load_dotenv(dotenv_path)
+            IP = os.environ.get('IP')
+        return IP
 
     @classmethod
     def get_highlow(cls, txt):
@@ -60,9 +70,13 @@ class Utilites:
         return text
 
     @classmethod
-    def data_save(cls, **kwargs):
-        now = datetime.now()
-        df = pd.DataFrame(columns=kwargs.keys())
-        row = pd.Series(kwargs, name=now.strftime("%I:%M:%S"))
-        df.loc[now.strftime("%I:%M:%S")] = row
-        df.to_csv(f'{now.strftime("%Y-%m-%d")}.csv', mode='a', header=False)
+    def data_save(cls, w_file, valve1, valve2, valve3, valve4):
+        pass
+
+    @classmethod
+    def get_pressure_for_set_data(cls, address, client=None):
+        pressure = client.read_holding_registers(address, 7)
+        pressure = [p for p in pressure.registers]
+        text = Utilites.convert_response(pressure)
+        return text
+

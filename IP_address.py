@@ -2,8 +2,8 @@
 import logging
 from PyQt5 import QtCore, QtGui, QtWidgets
 from pymodbus.client.sync import ModbusTcpClient
-from settings import ip
 from utilites import *
+
 
 class Ip_Dialog(object):
     def setupUi(self, Dialog):
@@ -42,17 +42,18 @@ class Ip_Dialog(object):
         self.pushButton = QtWidgets.QPushButton(Dialog)
         self.pushButton.setGeometry(QtCore.QRect(270, 290, 75, 23))
         self.pushButton.setObjectName("pushButton")
-        try:
-            self.client = ModbusTcpClient(ip)
-            self.client.connect()
-        except:
-            pass
-        try:
-            self.plainTextEdit.appendPlainText(str(Utilites.get_values_from_response(self.client.read_holding_registers(10084, 4))))
-            self.plainTextEdit_2.appendPlainText(str(Utilites.get_values_from_response(self.client.read_holding_registers(10088, 4))))
-            self.plainTextEdit_3.appendPlainText(str(Utilites.get_values_from_response(self.client.read_holding_registers(10092, 4))))
-        except:
-            pass
+        self.ip = Utilites.get_ip()
+        # try:
+        #     self.client = ModbusTcpClient(self.ip)
+        #     self.client.connect()
+        # except:
+        #     pass
+        # try:
+        #     self.plainTextEdit.appendPlainText(str(Utilites.get_values_from_response(self.client.read_holding_registers(10084, 4))))
+        #     self.plainTextEdit_2.appendPlainText(str(Utilites.get_values_from_response(self.client.read_holding_registers(10088, 4))))
+        #     self.plainTextEdit_3.appendPlainText(str(Utilites.get_values_from_response(self.client.read_holding_registers(10092, 4))))
+        # except:
+        #     pass
         self.pushButton.clicked.connect(self.send)
 
         self.retranslateUi(Dialog)
@@ -63,9 +64,12 @@ class Ip_Dialog(object):
             ip_data = self.plainTextEdit.toPlainText()
             mask_data = self.plainTextEdit_2.toPlainText()
             gateway = self.plainTextEdit_3.toPlainText()
-            self.client.write_registers(10084, [int(v) for v in ip_data.split('.')])
-            self.client.write_registers(10088, [int(v) for v in mask_data.split('.')])
-            self.client.write_registers(10092, [int(v) for v in gateway.split('.')])
+            with open('.env', 'w') as settings:
+                settings.write(f'IP={ip_data}')
+                settings.close()
+            # self.client.write_registers(10084, [int(v) for v in ip_data.split('.')])
+            # self.client.write_registers(10088, [int(v) for v in mask_data.split('.')])
+            # self.client.write_registers(10092, [int(v) for v in gateway.split('.')])
         except:
             logging.error('Please see you data!')
 

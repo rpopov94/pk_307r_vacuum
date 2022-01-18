@@ -1,10 +1,11 @@
-from graph_one import Graph_One
-from graph_second import Graph_Second
+import pandas as pd
+import numpy as np
 from spk_307 import Ui_Dialog
+from graph import DrawGraph
 import datetime
+from utilites import Utilites
 from settings_ui import *
 import logging
-import pandas as pd
 
 
 class QTextEditLogger(logging.Handler, QtCore.QObject):
@@ -24,23 +25,33 @@ class QTextEditLogger(logging.Handler, QtCore.QObject):
 
 
 class BrowserHandler(QtCore.QObject):
-    newTextAndColor = QtCore.pyqtSignal()
+    pressures = QtCore.pyqtSignal(list)
+
+    def __init__(self, client):
+        super().__init__()
+        self.client = client
 
     def run(self):
         while True:
-            self.newTextAndColor.emit()
-            QtCore.QThread.msleep(1000)
+            pressure1 = Utilites.get_pressure_for_set_data(286, self.client)
+            pressure2 = Utilites.get_pressure_for_set_data(272, self.client)
+            pressure3 = Utilites.get_pressure_for_set_data(300, self.client)
+            pressure4 = Utilites.get_pressure_for_set_data(314, self.client)
+
+            self.pressures.emit(
+                [pressure1, pressure2, pressure3, pressure4]
+            )
+            QtCore.QThread.msleep(1500)
 
 
 class SPK(QtWidgets.QWidget):
-    now = datetime.now()
-    df = pd.DataFrame()
-    df.to_csv(f'{now.strftime("%Y-%m-%d")}.csv')
     pressure = QtCore.pyqtSignal(int, int)
+
     def __init__(self):
         super().__init__()
         self.w_root = Ui_Dialog()
         self.w_root.setupUi(self)
+        self.IP = Utilites.get_ip()
         self.w_root.st_mption_1.clicked.connect(self.first_motion_control)
         self.w_root.st_motion_2.clicked.connect(self.second_motion_control)
         self.w_root.valve_11.clicked.connect(self.valve11_control)
@@ -52,24 +63,19 @@ class SPK(QtWidgets.QWidget):
         self.w_root.settings.clicked.connect(self.settings_cotrol)
         self.w_root.pushButton.clicked.connect(self.graph_1)
         self.w_root.pushButton_2.clicked.connect(self.graph_2)
-        self.w2 = Graph_One()
-        self.w3 = Graph_Second()
+        self.client = ModbusTcpClient(self.IP)
+        self.client.connect()
 
         self.thread = QtCore.QThread()
-        self.browserHandler = BrowserHandler()
+        self.browserHandler = BrowserHandler(self.client)
         self.browserHandler.moveToThread(self.thread)
-        self.browserHandler.newTextAndColor.connect(self.monitor)
+        self.browserHandler.pressures.connect(self.monitor)
         self.thread.started.connect(self.browserHandler.run)
-        self.thread.start(QtCore.QThread.LowestPriority) #раскоментировать когда будет подключена связь
+        self.thread.start(QtCore.QThread.LowestPriority)
 
         '''#######################logger ########################'''
         ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
         logTextBox = QTextEditLogger(self)
-        try:
-            self.client = ModbusTcpClient(ip)
-            self.client.connect()
-        except:
-            pass
         # log to text box
         logTextBox.setFormatter(
             logging.Formatter(
@@ -84,17 +90,22 @@ class SPK(QtWidgets.QWidget):
             logging.Formatter(
                 '%(asctime)s %(levelname)s %(module)s %(funcName)s %(message)s'))
         logging.getLogger().addHandler(fh)
+
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
     def graph_1(self):
-        if self.w3.two_thread.isRunning():
-            self.w3.two_thread.quit()
+        '''
+         addess = 286
+        '''
+        self.w2 = DrawGraph(self.IP, 286)
         self.w2.show()
 
     def graph_2(self):
-        if self.w2.one_thread.isRunning():
-            self.w2.one_thread.quit()
-        self.w3.show()
+        ''''
+        addess = 300
+        '''
+        self.w2 = DrawGraph(self.IP, 300)
+        self.w2.show()
 
     def create_logger(path, widget: QtWidgets.QTextEdit):
         log = logging.getLogger('main')
@@ -138,13 +149,6 @@ class SPK(QtWidgets.QWidget):
         if result == False:
             cmd = True
         self.client.write_coil(address, cmd)
-
-
-    def get_pressure(self, address):
-        pressure = self.client.read_holding_registers(address, 7)
-        pressure = [p for p in pressure.registers]
-        text = Utilites.convert_response(pressure)
-        return text
 
     def first_motion_control(self):
         try:
@@ -196,21 +200,32 @@ class SPK(QtWidgets.QWidget):
         except:
             logging.warning('Button stop not worked')
 
-    @QtCore.pyqtSlot()
-    def monitor(self):
+    @QtCore.pyqtSlot(list)
+    def monitor(self, data):
+        now = datetime.datetime.now()
         try:
-            now = datetime.datetime.now()
             self.w_root.date.setText(now.strftime('%c'))
-            pressure1 = self.get_pressure(286)
-            pressure2 = self.get_pressure(272)
-            pressure3 = self.get_pressure(300)
-            pressure4 = self.get_pressure(314)
-            Utilites.data_save(valve_1 = pressure1, valve_2 = pressure2,
-                               valve_3 = pressure3, valve_4 = pressure4)
-            self.w_root.pr_1.setText(pressure1)
-            self.w_root.pr_2.setText(pressure2)
-            self.w_root.pr_3.setText(pressure3)
-            self.w_root.pr_4.setText(pressure4)
+            self.w_root.pr_1.setText(data[0])
+            self.w_root.pr_2.setText(data[1])
+            self.w_root.pr_3.setText(data[2])
+            self.w_root.pr_4.setText(data[3])
+            names = ['valve_1', 'valve_2', 'valve_3', 'valve_4']
+            f = open(f'{now.strftime("%Y-%m-%d")}.csv', 'a')
+            writer = csv.DictWriter(f, fieldnames=names)
+            writer.writerow({
+                'valve_1':data[0][:-6],
+                'valve_2':data[1][:-6],
+                'valve_3':data[2][:-6],
+                'valve_4':data[3][:-6]
+            })
+            f.close()
+        except:
+            logging.error('Thread not work!')
+            self.w_root.pr_1.setText('None')
+            self.w_root.pr_2.setText('None')
+            self.w_root.pr_3.setText('None')
+            self.w_root.pr_4.setText('None')
+        try:
             self.pressure.emit(int(self.w_root.pr_4.text()), int(self.w_root.pr_1.text()))
             manage = Utilites.color(self.client.read_coils(258).bits[0])
             self.w_root.manage.setStyleSheet(f'background: {manage};')
@@ -227,11 +242,9 @@ class SPK(QtWidgets.QWidget):
             c6 = Utilites.color(self.client.read_coils(293).bits[0])
             self.w_root.valve_22.setStyleSheet(f'background: {c6};')
         except:
-            logging.error('Thread not work!')
-            self.w_root.pr_1.setText('None')
-            self.w_root.pr_2.setText('None')
-            self.w_root.pr_3.setText('None')
-            self.w_root.pr_4.setText('None')
+            pass
+
+
 
     def settings_cotrol(self):
         self.dialog = QtWidgets.QMainWindow()
